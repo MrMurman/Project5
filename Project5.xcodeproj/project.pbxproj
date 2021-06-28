@@ -13,6 +13,7 @@
 		95223903268A166600529E56 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95223901268A166600529E56 /* Main.storyboard */; };
 		95223905268A166900529E56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95223904268A166900529E56 /* Assets.xcassets */; };
 		95223908268A166900529E56 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95223906268A166900529E56 /* LaunchScreen.storyboard */; };
+		95223910268A174100529E56 /* start.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9522390F268A174100529E56 /* start.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		95223904268A166900529E56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		95223907268A166900529E56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		95223909268A166900529E56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9522390F268A174100529E56 /* start.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = start.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				95223904268A166900529E56 /* Assets.xcassets */,
 				95223906268A166900529E56 /* LaunchScreen.storyboard */,
 				95223909268A166900529E56 /* Info.plist */,
+				9522390F268A174100529E56 /* start.txt */,
 			);
 			path = Project5;
 			sourceTree = "<group>";
@@ -125,6 +128,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				95223908268A166900529E56 /* LaunchScreen.storyboard in Resources */,
+				95223910268A174100529E56 /* start.txt in Resources */,
 				95223905268A166900529E56 /* Assets.xcassets in Resources */,
 				95223903268A166600529E56 /* Main.storyboard in Resources */,
 			);
@@ -293,6 +297,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.MrMurmanProd.Project5;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -312,6 +317,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.MrMurmanProd.Project5;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
