@@ -11,9 +11,13 @@ class ViewController: UITableViewController {
 
     var allWords = [String]()
     var usedWords = [String]()
+    var score = Int()
  
+    // MARK: - Error types enum
+    // I decided to put all possible errors in a separate enum for further expansion
+    
     enum ErrorType {
-        case notPossible, notOriginal, notReal
+        case notPossible, notOriginal, notReal, emptyAnswer
         
         var errorTitle: String {
             switch self {
@@ -23,23 +27,32 @@ class ViewController: UITableViewController {
                 return "Word already used"
             case.notPossible:
                 return "Word not possible"
+            case .emptyAnswer:
+                return "No word found"
             }
         }
         var errorMessage: String {
             switch self {
             case .notReal:
-                return "You can't just make them up, you know!"
+                return                  """
+                                        The word should be at least 3 letters long
+                                        You can't just make them up, you know!
+                                        """
             case.notOriginal:
-                return "Be more original!"
+                return                  "Be more original!"
             case.notPossible:
-                return "You can't spell that word from PLACEHOLDER"
+                return                  """
+                                        You can't spell that word from the original word
+                                        """
+            case .emptyAnswer:
+                return "You tried to submit an empty field"
             }
         }
     
     }
    
     
-    
+    // MARK: - Main logic
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +67,7 @@ class ViewController: UITableViewController {
         }
         
         if allWords.isEmpty {
-            allWords = ["silkworm"]
+            allWords = ["KriTiKal ProoBleem"]
         }
         
         startGame()
@@ -62,11 +75,21 @@ class ViewController: UITableViewController {
 
 
     @objc func startGame() {
-        title = allWords.randomElement()
-        usedWords.removeAll(keepingCapacity: true)
-        tableView.reloadData()
+        
+        if score > 0 {
+            let ac = UIAlertController(title: "GAME OVER", message: "You have come up with \(score) words.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Start New Game", style: .default, handler: nil))
+            present(ac, animated: true, completion: nil)
+        } else {
+            title = allWords.randomElement()
+            usedWords.removeAll(keepingCapacity: true)
+            tableView.reloadData()
+            score = 0
+        }
+        
     }
     
+    // MARK: - Table View setup
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return usedWords.count
     }
@@ -91,33 +114,40 @@ class ViewController: UITableViewController {
         present(ac, animated: true)
     }
     
+    // MARK: Submit button logic
     func submit(_ answer: String) {
         let lowerAnswer = answer.lowercased()
         
-        
-        if isPossible(word: lowerAnswer) {
-            if isOriginal(word: lowerAnswer) {
-                if isReal(word: lowerAnswer) {
-                    usedWords.insert(answer, at: 0)
-                    
-                    let indexPath = IndexPath(row: 0, section: 0)
-                    tableView.insertRows(at: [indexPath], with: .automatic)
-                    
-                    return
-                } else {
-                    showErrorMessage(type: .notReal)
-                }
-            } else {
-                showErrorMessage(type: .notOriginal)
-            }
-        } else {
-            guard let title = title else {return}
-            showErrorMessage(type: .notPossible)
-//            errorTitle = "Word not possible"
-//            errorMessage = "You can't spell that word from \(title.lowercased())"
+        guard !lowerAnswer.isEmpty else {
+            showErrorMessage(type: .emptyAnswer)
+            return
         }
+        
+        guard isPossible(word: lowerAnswer) else {
+            showErrorMessage(type: .notPossible)
+            return
+        }
+        
+        guard isOriginal(word: lowerAnswer) else {
+            showErrorMessage(type: .notOriginal)
+            return
+        }
+        
+        guard isReal(word: lowerAnswer) else {
+            showErrorMessage(type: .notReal)
+            return
+        }
+        
+        usedWords.insert(answer.lowercased(), at: 0)
+        
+        let indexPath = IndexPath(row: 0, section: 0)
+        tableView.insertRows(at: [indexPath], with: .automatic)
+        score += 1
+        
     }
     
+    
+    // MARK: - possibility checks
     func isPossible(word: String) -> Bool {
         
         guard var tempWord = title?.lowercased() else {return false}
@@ -140,8 +170,6 @@ class ViewController: UITableViewController {
     func isReal(word: String) -> Bool {
         
         guard word.count >= 3 else {return false}
-        
-        
         let checker = UITextChecker()
         let range = NSRange(location: 0, length: word.utf16.count)
         let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
