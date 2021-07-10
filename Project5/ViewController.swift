@@ -9,7 +9,10 @@ import UIKit
 
 class ViewController: UITableViewController {
 
+    let defaults = UserDefaults.standard
+    
     var allWords = [String]()
+    var currentWord = String()
     var usedWords = [String]()
     var score = Int()
  
@@ -70,7 +73,22 @@ class ViewController: UITableViewController {
             allWords = ["KriTiKal ProoBleem"]
         }
         
-        startGame()
+        if let savedWord = defaults.string(forKey: "savedWord") {
+            currentWord = savedWord
+            title = currentWord
+            
+            let savedUsedWords = defaults.array(forKey: "savedUsedWords") as? [String]
+            usedWords = savedUsedWords ?? []
+            
+            let savedScore = defaults.integer(forKey: "savedScore")
+            score = savedScore
+            
+        } else {
+            startGame()
+        }
+        
+        
+        
     }
 
 
@@ -80,6 +98,11 @@ class ViewController: UITableViewController {
             let ac = UIAlertController(title: "GAME OVER", message: "You have come up with \(score) words.", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "Start New Game", style: .default, handler: nil))
             present(ac, animated: true, completion: nil)
+            currentWord = allWords.randomElement()!
+            title = currentWord
+            usedWords.removeAll(keepingCapacity: true)
+            tableView.reloadData()
+            score = 0
         } else {
             title = allWords.randomElement()
             usedWords.removeAll(keepingCapacity: true)
@@ -143,6 +166,7 @@ class ViewController: UITableViewController {
         let indexPath = IndexPath(row: 0, section: 0)
         tableView.insertRows(at: [indexPath], with: .automatic)
         score += 1
+        saveGame()
         
     }
     
@@ -184,6 +208,13 @@ class ViewController: UITableViewController {
         let ac = UIAlertController(title: type.errorTitle, message: type.errorMessage, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
+    }
+    
+    func saveGame() {
+        
+        defaults.set(currentWord, forKey: "savedWord")
+        defaults.set(usedWords, forKey: "savedUsedWords")
+        defaults.set(score, forKey: "savedScore")
     }
     
 }
